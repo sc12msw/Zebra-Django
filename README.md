@@ -26,7 +26,7 @@ Once set up configure your firewall on the raspberry pi to only allow requests f
 
 Add your printers using the django admin module and past in your ZPL using the {barcode} and {product} where you need the. For example:
 
-^XA
+`^XA
 
 ^FX Section with product name
 ^CF0,60
@@ -40,4 +40,33 @@ Add your printers using the django admin module and past in your ZPL using the {
 ^FO175,550^BC^FD{barcode}^FS
 
 
-^XZ
+^XZ`
+
+Then use your webapp to post data to the /labelprint (from backend as it has to be your server ip)
+Example in wordpress:
+
+
+`//Url of remote print server (white list policy will only accept if this is running on an accepted host)
+$url = 'http://127.0.0.1/labelprint';
+      $response = wp_remote_post($url , array(
+    	'method'      => 'POST',
+    	'timeout'     => 45,
+    	'redirection' => 5,
+    	'httpversion' => '1.0',
+    	'blocking'    => true,
+
+      'headers'     => array(
+        'Authorization' => 'Token lotsofnumbersandsymbolsgohere',
+        'Content-Type'  => 'application/json; charset=utf-8'
+        ),
+
+      'body'        => json_encode(array(
+        'printer' => $printer,
+        'barcode' => $barcode,
+        'product' => $product
+      )),
+
+      'cookies'     => array()
+        )
+      );
+`
